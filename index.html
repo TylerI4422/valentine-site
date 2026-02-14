@@ -21,7 +21,7 @@ body {
     font-weight: bold;
     color: #d63384;
     pointer-events: none;
-    z-index: 1000; /* above moving text */
+    z-index: 2;
 }
 
 /* Moving text */
@@ -31,12 +31,12 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    z-index: 999; /* below hint text */
+    z-index: 3; /* above hint */
 }
 
 /* Final static message box */
 #messageBox {
-    display: none;
+    display: none; /* hidden initially */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -48,11 +48,11 @@ body {
     background: #ffe6f0;
     border: 5px solid #d63384;
     border-radius: 20px;
-    padding: 50px;
+    padding: 50px 80px;
     box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
     user-select: none;     
     pointer-events: none;  
-    z-index: 2000;
+    z-index: 9999; /* on top of everything */
 }
 </style>
 </head>
@@ -71,7 +71,7 @@ const messages = [
 ];
 
 const movingText = document.getElementById("movingText");
-const hintText = document.getElementById("hintText"); // always visible
+const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
 let hoverCount = 0;
@@ -86,11 +86,11 @@ function randomPosition() {
     movingText.style.top = Math.random() * maxY + "px";
 }
 
-// --- Show final static message ---
+// --- Show final message box ---
 function triggerWin() {
-    movingText.style.display = "none";      // hide moving text
-    hintText.style.display = "none";        // hide hint after win
-    messageBox.style.display = "block";     // show final static message
+    movingText.style.display = "none";   // hide moving text
+    hintText.style.display = "none";     // hide hint
+    messageBox.style.display = "block";  // show the pretty box
 }
 
 // --- Hover event ---
@@ -101,10 +101,10 @@ movingText.addEventListener("mouseenter", () => {
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // Move text slightly after so hover registers
-    setTimeout(randomPosition, 50); 
+    // Move text slightly after hover to register event
+    setTimeout(randomPosition, 50);
 
-    // Trigger win if threshold reached
+    // Check threshold
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
