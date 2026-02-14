@@ -30,6 +30,15 @@ body {
     cursor: pointer;
     user-select: none;
     z-index: 20;
+    animation: heartbeat 1.2s infinite;
+}
+
+/* Heartbeat animation */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1.2); }
+    75% { transform: scale(1.1); }
 }
 
 #messageBox {
@@ -93,6 +102,7 @@ function triggerWin() {
 movingText.addEventListener("mouseover", () => {
     // Update text AND move instantly
     movingText.textContent = messages[messageIndex];
+    console.log("Hover count:", hoverCount + 1, "Message:", messages[messageIndex]);
     messageIndex = (messageIndex + 1) % messages.length;
 
     randomPosition();
