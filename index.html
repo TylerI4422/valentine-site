@@ -2,82 +2,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Catch Me ❤️</title>
-
-<style>
-    body {
-        margin: 0;
-        overflow: hidden;
-        background: #fff0f5;
-        font-family: Arial, sans-serif;
-    }
-
-    #movingText {
-        position: absolute;
-        font-size: 30px;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
-        transition: transform 0.1s;
-    }
-
-    #overlay {
-        display: none;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        top: 0;
-        left: 0;
-    }
-
-    #finalPopup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 60px;
-        border-radius: 20px;
-        box-shadow: 0 0 50px rgba(0,0,0,0.4);
-        text-align: center;
-        font-size: 36px;
-        font-weight: bold;
-    }
-</style>
+<title>Test</title>
 </head>
 
-<body>
+<body style="background:pink;">
 
-<div id="movingText"></div>
-<div id="overlay"></div>
-
-<div id="finalPopup">
-    ❤️ I love you more than words can run away from ❤️
-</div>
+<div id="movingText" style="position:absolute;font-size:30px;font-weight:bold;cursor:pointer;"></div>
 
 <script>
 
-/* ===============================
-   EDIT YOUR MESSAGES HERE
-=============================== */
-
-const messages = [
-    "i love you",
-    "so much",
-    "more than you know",
-    "try to catch this",
-    "almost there...",
-    "one more time"
-];
-
-/* =============================== */
+const messages = ["i love you", "so much", "forever"];
 
 const text = document.getElementById("movingText");
-const popup = document.getElementById("finalPopup");
-const overlay = document.getElementById("overlay");
-
 let clickCount = 0;
 
 function randomPosition() {
@@ -91,32 +27,19 @@ function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
     } else {
-        text.style.display = "none";
-        overlay.style.display = "block";
-        popup.style.display = "block";
+        text.textContent = "❤️";
     }
 }
 
-// Runs away when mouse gets close
-document.addEventListener("mousemove", (e) => {
-    const rect = text.getBoundingClientRect();
-    const distance = Math.hypot(
-        e.clientX - (rect.left + rect.width / 2),
-        e.clientY - (rect.top + rect.height / 2)
-    );
-
-    if (distance < 120) {
-        randomPosition();
-    }
+document.addEventListener("mousemove", () => {
+    randomPosition();
 });
 
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
-    randomPosition();
 });
 
-// Initialize
 updateText();
 randomPosition();
 
