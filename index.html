@@ -12,10 +12,11 @@ body {
 }
 #movingText {
     position: absolute;
-    font-size: 24px; /* smaller, harder to touch */
+    font-size: 30px; /* slightly bigger for easier clicking */
     font-weight: bold;
     cursor: pointer;
     user-select: none;
+    transition: left 0.08s, top 0.08s; /* fast but visible jump */
 }
 #finalPopup {
     display: none;
@@ -52,16 +53,33 @@ const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
+let lastMouse = {x: 0, y: 0};
 
-// Teleport anywhere instantly
+// Track mouse position
+document.addEventListener("mousemove", (e) => {
+    lastMouse = {x: e.clientX, y: e.clientY};
+});
+
+// Random position at least 100px away from cursor
 function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const minDistance = 100;
+    let x, y, distance;
+
+    do {
+        x = Math.random() * (window.innerWidth - 100);
+        y = Math.random() * (window.innerHeight - 50);
+        const centerX = x + text.offsetWidth / 2;
+        const centerY = y + text.offsetHeight / 2;
+        const dx = centerX - lastMouse.x;
+        const dy = centerY - lastMouse.y;
+        distance = Math.hypot(dx, dy);
+    } while (distance < minDistance);
+
     text.style.left = x + "px";
     text.style.top = y + "px";
 }
 
-// Update text
+// Update text content
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -71,12 +89,12 @@ function updateText() {
     }
 }
 
-// Move the instant cursor touches the text
+// Move instantly when cursor touches it
 text.addEventListener("mouseenter", () => {
     randomPosition();
 });
 
-// Click advances message
+// Click to advance message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
