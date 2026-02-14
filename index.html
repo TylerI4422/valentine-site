@@ -61,9 +61,11 @@ body {
 
 <script>
 const messages = [
-  "I love you", "So much", "You make me happy", "You're the best",
+  "I love you", "Is that the best you got?", "You make me happy", "You're the best",
   "I am so proud of you", "Forever and always", "You inspire me",
-  "My everything", "You complete me", "Love you to the moon"
+  "My everything", "Not fast enough!", "Love you to the moon", "I thought you'd be better at this", 
+  "You are the best teacher I know", "I am so happy we met", "Come on, faster!", 
+  "6, 7", "You got this sweetheart!!!", "I love doing life with you"
 ];
 
 const movingText = document.getElementById("movingText");
@@ -71,7 +73,7 @@ const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
 let hoverCount = 0;
-const HOVER_THRESHOLD = 20;
+const HOVER_THRESHOLD = 40;
 let messageIndex = 0;
 
 // Move text to a random position
