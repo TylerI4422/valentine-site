@@ -27,7 +27,7 @@ body {
 /* Moving text */
 #movingText {
     position: absolute;
-    font-size: 36px;
+    font-size: 28px; /* smaller to make it harder */
     font-weight: bold;
     cursor: pointer;
     user-select: none;
@@ -78,10 +78,12 @@ const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
 let canHover = true;
 
-// --- Random position ---
+// --- Random position (bigger jumps) ---
 function randomPosition() {
     const maxX = window.innerWidth - movingText.offsetWidth;
     const maxY = window.innerHeight - movingText.offsetHeight;
+
+    // Move to a completely random position (more challenging)
     movingText.style.left = Math.random() * maxX + "px";
     movingText.style.top = Math.random() * maxY + "px";
 }
@@ -95,9 +97,9 @@ function triggerWin() {
 
 // --- Hover event ---
 movingText.addEventListener("mouseover", () => {
-    if (!canHover) return; // prevent double trigger
+    if (!canHover) return;
 
-    canHover = false;       // lock hover until movement finishes
+    canHover = false;
 
     // Update text
     movingText.textContent = messages[messageIndex];
@@ -108,7 +110,7 @@ movingText.addEventListener("mouseover", () => {
     // Move text after tiny delay
     setTimeout(() => {
         randomPosition();
-        canHover = true; // re-enable hover after move
+        canHover = true;
     }, 50);
 
     if (hoverCount >= HOVER_THRESHOLD) {
