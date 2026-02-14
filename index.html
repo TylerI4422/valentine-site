@@ -60,6 +60,7 @@ body {
 <div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
+// --- Messages array ---
 const messages = [
   "I love you", "Is that the best you got?", "You make me happy", "You're the best",
   "I am so proud of you", "Forever and always", "You inspire me",
@@ -73,10 +74,10 @@ const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
 let hoverCount = 0;
-const HOVER_THRESHOLD = 40;
+const HOVER_THRESHOLD = 30; // Updated threshold
 let messageIndex = 0;
 
-// Move text to a random position
+// --- Move text to random position ---
 function randomPosition() {
   const maxX = window.innerWidth - movingText.offsetWidth;
   const maxY = window.innerHeight - movingText.offsetHeight;
@@ -84,24 +85,26 @@ function randomPosition() {
   movingText.style.top = Math.random() * maxY + "px";
 }
 
-// Show final message
+// --- Show final message ---
 function triggerWin() {
   movingText.style.display = "none";
   hintText.style.display = "none";
   messageBox.style.display = "block";
 }
 
-// Hover handler
+// --- Hover event ---
 movingText.addEventListener("mouseover", () => {
   hoverCount++;
-  
+
   // Update text
   movingText.textContent = messages[messageIndex];
   console.log(`Hover #${hoverCount} | Message: "${messages[messageIndex]}"`);
-  messageIndex = (messageIndex + 1) % messages.length;
 
-  // Move text instantly
+  // Move instantly
   randomPosition();
+
+  // Cycle to next message
+  messageIndex = (messageIndex + 1) % messages.length;
 
   // Trigger final box
   if (hoverCount >= HOVER_THRESHOLD) {
@@ -109,7 +112,7 @@ movingText.addEventListener("mouseover", () => {
   }
 });
 
-// Initialize
+// --- Initialize ---
 movingText.textContent = messages[0];
 randomPosition();
 </script>
