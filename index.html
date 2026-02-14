@@ -30,10 +30,13 @@ body {
     cursor: pointer;
     user-select: none;
     z-index: 20;
+}
+
+#movingText span {
+    display: inline-block;
     animation: heartbeat 1.2s infinite;
 }
 
-/* Heartbeat animation */
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
     25% { transform: scale(1.1); }
@@ -65,7 +68,7 @@ body {
 <body>
 
 <div id="hintText">Try to click me!</div>
-<div id="movingText">I love you!</div>
+<div id="movingText"><span>I love you!</span></div>
 <div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
@@ -76,6 +79,7 @@ const messages = [
 ];
 
 const movingText = document.getElementById("movingText");
+const movingSpan = movingText.querySelector("span");
 const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
@@ -100,21 +104,27 @@ function triggerWin() {
 
 // --- Hover event ---
 movingText.addEventListener("mouseover", () => {
-    // Update text AND move instantly
-    movingText.textContent = messages[messageIndex];
-    console.log("Hover count:", hoverCount + 1, "Message:", messages[messageIndex]);
+    // Increment hover count first
+    hoverCount++;
+
+    // Log to console
+    console.log(`Hover #${hoverCount} | Message: "${messages[messageIndex]}"`);
+
+    // Update text inside span
+    movingSpan.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
+    // Move instantly
     randomPosition();
 
-    hoverCount++;
+    // Trigger final message if threshold reached
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
 });
 
 // --- Initialize ---
-movingText.textContent = messages[0];
+movingSpan.textContent = messages[0];
 randomPosition();
 </script>
 
