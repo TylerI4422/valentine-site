@@ -10,13 +10,22 @@ body {
     background: #fff0f5;
     font-family: Arial, sans-serif;
 }
+#hintText {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #d63384;
+}
 #movingText {
     position: absolute;
-    font-size: 30px; /* slightly bigger for easier clicking */
+    font-size: 36px; /* easier to click */
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: left 0.08s, top 0.08s; /* fast but visible jump */
+    transition: left 0.12s, top 0.12s; /* visible jump */
 }
 #finalPopup {
     display: none;
@@ -36,6 +45,7 @@ body {
 </head>
 <body>
 
+<div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
 <div id="finalPopup">❤️ I love you. Always. ❤️</div>
 
@@ -72,7 +82,7 @@ function updateText() {
     }
 }
 
-// Teleport the moment cursor touches the text
+// Move instantly on hover
 text.addEventListener("mouseenter", () => {
     randomPosition();
 });
