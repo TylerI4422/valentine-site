@@ -7,21 +7,8 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: #fff0f5;
+    background-color: #fff0f5;
     font-family: Arial, sans-serif;
-}
-
-/* Hint text */
-#hintText {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    font-weight: bold;
-    color: #d63384;
-    z-index: 9999;
-    pointer-events: none;
 }
 
 /* Moving text */
@@ -31,54 +18,45 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    z-index: 10;
 }
 
-/* Win box */
-#winBox {
-    display: none;
+/* Final static message */
+#messageBox {
+    display: none; /* hidden initially */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
-    padding: 50px;
-    background-color: #ffe6f0;
-    border: 4px solid #d63384;
-    border-radius: 20px;
-    box-shadow: 0 0 50px rgba(0,0,0,0.4);
     text-align: center;
     font-size: 72px;
     font-weight: bold;
     color: #d63384;
-    z-index: 1000;
+    user-select: none;     /* can't highlight */
+    pointer-events: none;  /* not clickable */
 }
 </style>
 </head>
 <body>
 
-<div id="hintText">Try to hover over me!</div>
 <div id="movingText">I love you!</div>
-<div id="winBox">YOU ARE AMAZING</div>
+<div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
-// Messages for moving text
+// --- Messages that will appear in moving text ---
 const messages = [
-    "i love you","so much","more than you know","you make me so happy","almost there...",
-    "okay fine","my heart is yours","you’re the best","i am so proud of you","you’re amazing",
-    "i appreciate you","forever and always","you complete me","my everything","you’re my sunshine",
-    "my heart beats for you","love you to the moon","you’re incredible","you inspire me","you mean so much to me"
+    "I love you", "So much", "You make me happy", "You're the best",
+    "I am so proud of you", "Forever and always", "You inspire me",
+    "My everything", "You complete me", "Love you to the moon"
 ];
 
 const movingText = document.getElementById("movingText");
-const hintText = document.getElementById("hintText");
-const winBox = document.getElementById("winBox");
+const messageBox = document.getElementById("messageBox");
 
 let hoverCount = 0;
-const HOVER_THRESHOLD = 10; // number of hovers before win
+const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
 
-// --- Move text to a random position ---
+// --- Randomly position moving text ---
 function randomPosition() {
     const maxX = window.innerWidth - movingText.offsetWidth;
     const maxY = window.innerHeight - movingText.offsetHeight;
@@ -86,33 +64,27 @@ function randomPosition() {
     movingText.style.top = Math.random() * maxY + "px";
 }
 
-// --- Show win box ---
-function triggerWin() {
-    movingText.style.display = "none";
-    hintText.style.display = "none";
-    winBox.style.display = "block";
-}
-
 // --- Hover event ---
 movingText.addEventListener("mouseenter", () => {
     hoverCount++;
 
-    // Cycle through messages
+    // Update the text to the next message
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // Move text to random position
+    // Move the text randomly
     randomPosition();
 
-    // Check hover threshold
+    // Check if threshold reached
     if (hoverCount >= HOVER_THRESHOLD) {
-        triggerWin();
+        movingText.style.display = "none"; // hide moving text
+        messageBox.style.display = "block"; // show final static message
     }
 });
 
 // --- Initialize ---
-randomPosition();
 movingText.textContent = messages[0];
+randomPosition();
 </script>
 
 </body>
