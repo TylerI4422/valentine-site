@@ -21,7 +21,7 @@ body {
     font-weight: bold;
     color: #d63384;
     pointer-events: none;
-    z-index: 2;
+    z-index: 10;
 }
 
 /* Moving text */
@@ -31,12 +31,12 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    z-index: 3; /* above hint */
+    z-index: 20;
 }
 
 /* Final static message box */
 #messageBox {
-    display: none; /* hidden initially */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -52,7 +52,7 @@ body {
     box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
     user-select: none;     
     pointer-events: none;  
-    z-index: 9999; /* on top of everything */
+    z-index: 9999;
 }
 </style>
 </head>
@@ -63,7 +63,6 @@ body {
 <div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
-// --- Messages for moving text ---
 const messages = [
     "I love you", "So much", "You make me happy", "You're the best",
     "I am so proud of you", "Forever and always", "You inspire me",
@@ -77,6 +76,7 @@ const messageBox = document.getElementById("messageBox");
 let hoverCount = 0;
 const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
+let canHover = true;
 
 // --- Random position ---
 function randomPosition() {
@@ -86,25 +86,31 @@ function randomPosition() {
     movingText.style.top = Math.random() * maxY + "px";
 }
 
-// --- Show final message box ---
+// --- Show final message ---
 function triggerWin() {
-    movingText.style.display = "none";   // hide moving text
-    hintText.style.display = "none";     // hide hint
-    messageBox.style.display = "block";  // show the pretty box
+    movingText.style.display = "none";
+    hintText.style.display = "none";
+    messageBox.style.display = "block";
 }
 
 // --- Hover event ---
-movingText.addEventListener("mouseenter", () => {
-    hoverCount++;
+movingText.addEventListener("mouseover", () => {
+    if (!canHover) return; // prevent double trigger
 
-    // Update text first
+    canHover = false;       // lock hover until movement finishes
+
+    // Update text
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // Move text slightly after hover to register event
-    setTimeout(randomPosition, 50);
+    hoverCount++;
 
-    // Check threshold
+    // Move text after tiny delay
+    setTimeout(() => {
+        randomPosition();
+        canHover = true; // re-enable hover after move
+    }, 50);
+
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
