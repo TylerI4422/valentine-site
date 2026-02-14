@@ -11,7 +11,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Hint text at the top */
 #hintText {
     position: fixed;
     top: 20px;
@@ -24,17 +23,15 @@ body {
     z-index: 10;
 }
 
-/* Moving text */
 #movingText {
     position: absolute;
-    font-size: 28px; /* smaller to make it harder */
+    font-size: 36px;
     font-weight: bold;
     cursor: pointer;
     user-select: none;
     z-index: 20;
 }
 
-/* Final static message box */
 #messageBox {
     display: none;
     position: fixed;
@@ -76,14 +73,11 @@ const messageBox = document.getElementById("messageBox");
 let hoverCount = 0;
 const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
-let canHover = true;
 
-// --- Random position (bigger jumps) ---
+// --- Random position ---
 function randomPosition() {
     const maxX = window.innerWidth - movingText.offsetWidth;
     const maxY = window.innerHeight - movingText.offsetHeight;
-
-    // Move to a completely random position (more challenging)
     movingText.style.left = Math.random() * maxX + "px";
     movingText.style.top = Math.random() * maxY + "px";
 }
@@ -97,22 +91,13 @@ function triggerWin() {
 
 // --- Hover event ---
 movingText.addEventListener("mouseover", () => {
-    if (!canHover) return;
-
-    canHover = false;
-
-    // Update text
+    // Update text AND move instantly
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
+    randomPosition();
+
     hoverCount++;
-
-    // Move text after tiny delay
-    setTimeout(() => {
-        randomPosition();
-        canHover = true;
-    }, 50);
-
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
