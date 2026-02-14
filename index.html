@@ -55,7 +55,7 @@ body {
 
 <div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
-<div id="finalPopup" id="winMessage">❤️ I LOVE YOU SO MUCH! ❤️</div>
+<div id="finalPopup">🎉 YOU WIN! 🎉\nI love you so much!</div>
 
 <script>
 // --- Messages for hover text ---
@@ -71,7 +71,7 @@ const popup = document.getElementById("finalPopup");
 
 // --- Game state ---
 let hoverCounter = 0;
-const HOVER_THRESHOLD = 10; // set how many hovers before win
+const HOVER_THRESHOLD = 10; // change this number to whatever you like
 let hoverIndex = 0;
 let currentFontSize = 36;
 
@@ -87,7 +87,7 @@ function randomPosition() {
 function triggerWin() {
     text.style.display = "none";           // hide the runaway text
     popup.style.display = "block";         // show big box
-    popup.textContent = "🎉 YOU WIN! 🎉\nI love you so much!"; // <-- edit your custom message here
+    popup.textContent = "🎉 YOU WIN! 🎉\nI love you so much!"; // <-- edit your message here
 }
 
 // --- Hover event ---
