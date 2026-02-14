@@ -19,8 +19,8 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #d63384;
-    z-index: 9999; /* guarantee on top */
-    pointer-events: none; /* mouse passes through it */
+    z-index: 9999;
+    pointer-events: none;
 }
 
 #movingText {
@@ -71,6 +71,8 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 let hoverIndex = 0;
+let hoverCounter = 0; // track mouse touches
+let currentFontSize = 36; // starting font size
 
 // Random position anywhere full viewport
 function randomPosition() {
@@ -94,22 +96,35 @@ function updateText() {
     }
 }
 
-// Hover: change text and teleport
+// Hover: change text, teleport, shrink font, increment counter
 text.addEventListener("mouseenter", () => {
-    hoverIndex = (hoverIndex + 1) % messages.length;
+    hoverCounter++;
+    // cycle hover messages
     text.textContent = messages[hoverIndex];
+    hoverIndex = (hoverIndex + 1) % messages.length;
+
+    // shrink font slightly, min 12px
+    currentFontSize = Math.max(currentFontSize - 2, 12);
+    text.style.fontSize = currentFontSize + "px";
+
     randomPosition();
 });
 
-// Click: advance main message
+// Click: only allowed after 100 hovers
 text.addEventListener("click", () => {
-    clickCount++;
-    updateText();
-    randomPosition();
+    if (hoverCounter >= 100) {
+        clickCount++;
+        updateText();
+        randomPosition();
+    } else {
+        // optional: feedback for early clicks
+        console.log(`Keep trying! Hovers: ${hoverCounter}/100`);
+    }
 });
 
 // Initialize
 text.textContent = messages[0];
+text.style.fontSize = currentFontSize + "px";
 randomPosition();
 </script>
 
