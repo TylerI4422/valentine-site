@@ -55,10 +55,10 @@ body {
 
 <div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
-<div id="finalPopup">🎉 YOU WIN! 🎉\nI love you so much!</div>
+<div id="finalPopup"></div>
 
 <script>
-// --- Messages for hover text ---
+// --- Hover messages ---
 const messages = [
     "i love you","so much","more than you know","you make me so happy","almost there...",
     "okay fine","my heart is yours","you’re the best","i am so proud of you","you’re amazing",
@@ -69,9 +69,9 @@ const messages = [
 const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
-// --- Game state ---
+// --- State ---
 let hoverCounter = 0;
-const HOVER_THRESHOLD = 10; // change this number to whatever you like
+const HOVER_THRESHOLD = 10; // change this number
 let hoverIndex = 0;
 let currentFontSize = 36;
 
@@ -85,9 +85,10 @@ function randomPosition() {
 
 // --- Trigger Win ---
 function triggerWin() {
-    text.style.display = "none";           // hide the runaway text
-    popup.style.display = "block";         // show big box
-    popup.textContent = "🎉 YOU WIN! 🎉\nI love you so much!"; // <-- edit your message here
+    text.style.display = "none";       // hide runaway text
+    popup.style.display = "block";     // show big box
+    // <-- Edit your message here:
+    popup.innerHTML = "🎉 YOU WIN! 🎉<br>I love you so much!";
 }
 
 // --- Hover event ---
@@ -107,7 +108,7 @@ text.addEventListener("mouseenter", () => {
 
     // check if threshold reached
     if (hoverCounter >= HOVER_THRESHOLD) {
-        triggerWin(); // automatically win
+        triggerWin(); // automatically show popup
     }
 });
 
