@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Catch Me ❤️</title>
+<title>Valentine Surprise ❤️</title>
 <style>
 body {
     margin: 0;
@@ -29,92 +29,68 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: none;
     z-index: 10;
 }
 
-#finalPopup {
-    display: none;
+#messageBox {
+    display: none; /* hidden initially */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #ffe6f0;
-    padding: 50px;
-    border-radius: 25px;
+    width: 600px;
+    padding: 40px;
+    background-color: #ffe6f0;
+    border: 4px solid #d63384;
+    border-radius: 20px;
     box-shadow: 0 0 50px rgba(0,0,0,0.4);
     text-align: center;
-    font-size: 36px;
+    font-size: 48px;
     font-weight: bold;
-    z-index: 10000;
     color: #d63384;
+    z-index: 1000;
 }
 </style>
 </head>
 <body>
 
-<div id="hintText">Try to click me!</div>
-<div id="movingText"></div>
-<div id="finalPopup"></div>
+<div id="hintText">Try to hover over me!</div>
+<div id="movingText">I love you!</div>
+<div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
-// --- Hover messages ---
-const messages = [
-    "i love you","so much","more than you know","you make me so happy","almost there...",
-    "okay fine","my heart is yours","you’re the best","i am so proud of you","you’re amazing",
-    "i appreciate you","forever and always","you complete me","my everything","you’re my sunshine",
-    "my heart beats for you","love you to the moon","you’re incredible","you inspire me","you mean so much to me"
-];
+// --- Variables ---
+const movingText = document.getElementById("movingText");
+const messageBox = document.getElementById("messageBox");
 
-const text = document.getElementById("movingText");
-const popup = document.getElementById("finalPopup");
+let hoverCount = 0;
+const HOVER_THRESHOLD = 10; // change this number to whatever you want
 
-// --- State ---
-let hoverCounter = 0;
-const HOVER_THRESHOLD = 10; // change this number
-let hoverIndex = 0;
-let currentFontSize = 36;
-
-// --- Random position ---
+// --- Function: random position ---
 function randomPosition() {
-    const maxX = window.innerWidth - text.offsetWidth;
-    const maxY = window.innerHeight - text.offsetHeight;
-    text.style.left = Math.random() * maxX + "px";
-    text.style.top = Math.random() * maxY + "px";
-}
-
-// --- Trigger Win ---
-function triggerWin() {
-    text.style.display = "none";       // hide runaway text
-    popup.style.display = "block";     // show big box
-    // <-- Edit your message here:
-    popup.innerHTML = "🎉 YOU WIN! 🎉<br>I love you so much!";
+    const maxX = window.innerWidth - movingText.offsetWidth;
+    const maxY = window.innerHeight - movingText.offsetHeight;
+    movingText.style.left = Math.random() * maxX + "px";
+    movingText.style.top = Math.random() * maxY + "px";
 }
 
 // --- Hover event ---
-text.addEventListener("mouseenter", () => {
-    hoverCounter++;
+movingText.addEventListener("mouseenter", () => {
+    hoverCount++;
+    randomPosition(); // move text each hover
 
-    // cycle hover messages
-    text.textContent = messages[hoverIndex];
-    hoverIndex = (hoverIndex + 1) % messages.length;
+    if (hoverCount >= HOVER_THRESHOLD) {
+        // Hide everything
+        movingText.style.display = "none";
+        document.getElementById("hintText").style.display = "none";
 
-    // shrink font (min 12px)
-    currentFontSize = Math.max(currentFontSize - 2, 12);
-    text.style.fontSize = currentFontSize + "px";
-
-    // teleport
-    randomPosition();
-
-    // check if threshold reached
-    if (hoverCounter >= HOVER_THRESHOLD) {
-        triggerWin(); // automatically show popup
+        // Show message box
+        messageBox.style.display = "block";
+        messageBox.textContent = "YOU ARE AMAZING"; // <-- EDIT YOUR MESSAGE HERE
     }
 });
 
 // --- Initialize ---
-text.textContent = messages[0];
-text.style.fontSize = currentFontSize + "px";
 randomPosition();
 </script>
 
