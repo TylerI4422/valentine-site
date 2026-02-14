@@ -11,6 +11,19 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Hint text at the top */
+#hintText {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #d63384;
+    z-index: 9999;
+    pointer-events: none; /* so it can't be clicked */
+}
+
 /* Moving text */
 #movingText {
     position: absolute;
@@ -38,6 +51,7 @@ body {
 </head>
 <body>
 
+<div id="hintText">Try to click me!</div>
 <div id="movingText">I love you!</div>
 <div id="messageBox">YOU ARE AMAZING</div>
 
@@ -50,6 +64,7 @@ const messages = [
 ];
 
 const movingText = document.getElementById("movingText");
+const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
 let hoverCount = 0;
@@ -64,23 +79,29 @@ function randomPosition() {
     movingText.style.top = Math.random() * maxY + "px";
 }
 
+// --- Show final static message ---
+function triggerWin() {
+    movingText.style.display = "none"; // hide moving text
+    hintText.style.display = "none";   // hide hint
+    messageBox.style.display = "block"; // show static win message
+}
+
 // --- Hover event ---
 movingText.addEventListener("mouseenter", () => {
     hoverCount++;
 
-    // 1️⃣ Update text first
+    // Update text first
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // 2️⃣ Force browser to render the text before moving
+    // Move text after DOM updates
     requestAnimationFrame(() => {
         randomPosition();
     });
 
-    // 3️⃣ Check threshold
+    // Check threshold
     if (hoverCount >= HOVER_THRESHOLD) {
-        movingText.style.display = "none"; // hide moving text
-        messageBox.style.display = "block"; // show final static message
+        triggerWin();
     }
 });
 
