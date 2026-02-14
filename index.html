@@ -10,13 +10,22 @@ body {
     background: #fff0f5;
     font-family: Arial, sans-serif;
 }
+#hintText {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #d63384;
+}
 #movingText {
     position: absolute;
-    font-size: 36px;
+    font-size: 18px; /* tiny to make it hard to find */
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: left 0.05s, top 0.05s;
+    transition: left 0.1s, top 0.1s;
 }
 #finalPopup {
     display: none;
@@ -36,6 +45,7 @@ body {
 </head>
 <body>
 
+<div id="hintText">Click me!</div>
 <div id="movingText"></div>
 <div id="finalPopup">❤️ I love you. Always. ❤️</div>
 
@@ -53,12 +63,10 @@ const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
-let lastMoveTime = 0;
-let lastMouse = {x: 0, y: 0};
 
 function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 250);
-    const y = Math.random() * (window.innerHeight - 150);
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
     text.style.left = x + "px";
     text.style.top = y + "px";
 }
@@ -72,48 +80,14 @@ function updateText() {
     }
 }
 
-document.addEventListener("mousemove", (e) => {
-    const now = Date.now();
-    if (now - lastMoveTime < 400) return; // cooldown
-
-    const rect = text.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const toText = {x: centerX - e.clientX, y: centerY - e.clientY};
-    const cursorMove = {x: e.clientX - lastMouse.x, y: e.clientY - lastMouse.y};
-
-    lastMouse = {x: e.clientX, y: e.clientY};
-
-    const distance = Math.hypot(toText.x, toText.y);
-    if (distance > 200) return; // only react if close
-
-    // Dot product to check if cursor is moving toward text
-    const dot = toText.x * cursorMove.x + toText.y * cursorMove.y;
-
-    if (dot > 0) { // cursor is approaching
-        // move opposite the cursor
-        let newX = rect.left - cursorMove.x * 3;
-        let newY = rect.top - cursorMove.y * 3;
-
-        // clamp within screen
-        newX = Math.min(Math.max(0, newX), window.innerWidth - 250);
-        newY = Math.min(Math.max(0, newY), window.innerHeight - 150);
-
-        text.style.left = newX + "px";
-        text.style.top = newY + "px";
-
-        lastMoveTime = now;
-    }
-});
-
-// click to advance
+// every click teleports text
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
     randomPosition();
 });
 
+// initialize
 updateText();
 randomPosition();
 </script>
