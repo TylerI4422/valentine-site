@@ -14,11 +14,10 @@
 
     #movingText {
         position: absolute;
-        font-size: 34px;
+        font-size: 36px;
         font-weight: bold;
         cursor: pointer;
         user-select: none;
-        transition: transform 0.1s;
     }
 
     #finalPopup {
@@ -67,8 +66,9 @@ const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
-let moveCooldown = false;
+let canMove = true;
 
+// Teleport
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 250);
     const y = Math.random() * (window.innerHeight - 150);
@@ -76,6 +76,7 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
+// Update message
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -85,19 +86,28 @@ function updateText() {
     }
 }
 
-// Teleport when hovered
-text.addEventListener("mouseenter", () => {
-    if (!moveCooldown) {
-        randomPosition();
-        moveCooldown = true;
+// Move only when cursor gets close
+document.addEventListener("mousemove", (e) => {
+    if (!canMove) return;
 
+    const rect = text.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+
+    if (distance < 80) {  // how close before it runs
+        randomPosition();
+        canMove = false;
+
+        // lock movement for 1 full second
         setTimeout(() => {
-            moveCooldown = false;
-        }, 700);
+            canMove = true;
+        }, 1000);
     }
 });
 
-// Change text when clicked
+// Click advances message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
