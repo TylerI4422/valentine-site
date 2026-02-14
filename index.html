@@ -16,7 +16,6 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: left 0.05s, top 0.05s; /* smooth but quick */
 }
 #finalPopup {
     display: none;
@@ -54,7 +53,7 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 
-// Random position within viewport
+// Pick a random position across the full screen
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 200);
     const y = Math.random() * (window.innerHeight - 100);
@@ -62,7 +61,7 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
-// Update the displayed message
+// Update the text content
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -72,12 +71,12 @@ function updateText() {
     }
 }
 
-// Move the text the instant the cursor touches it
+// The moment the cursor touches the text, move it completely elsewhere
 text.addEventListener("mouseenter", () => {
-    randomPosition();
+    randomPosition(); // no transition, instant jump
 });
 
-// Click to advance message and teleport
+// Click changes the message and teleports again
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
