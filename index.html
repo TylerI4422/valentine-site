@@ -39,17 +39,20 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  font-size: 32px;
+  font-size: 28px;            /* smaller font for long message */
   font-weight: bold;
   color: #d63384;
   background: #ffe6f0;
   border: 5px solid #d63384;
   border-radius: 20px;
-  padding: 50px 80px;
+  padding: 40px 60px;
+  max-width: 80%;              /* prevents it from being too wide */
   box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
-  user-select: none;     
-  pointer-events: none;  
+  user-select: none;
+  pointer-events: none;
   z-index: 9999;
+  word-wrap: break-word;       /* wrap long words */
+  line-height: 1.4;            /* improves readability */
 }
 </style>
 </head>
