@@ -25,23 +25,11 @@ body {
 
 #movingText {
   position: absolute;
+  font-size: 36px;
   font-weight: bold;
   cursor: pointer;
   user-select: none;
   z-index: 20;
-}
-
-#movingText span {
-  display: inline-block;
-  font-size: 36px;
-  animation: heartbeat 1.2s infinite;
-}
-
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.1); }
-  50% { transform: scale(1.2); }
-  75% { transform: scale(1.1); }
 }
 
 #messageBox {
@@ -59,8 +47,8 @@ body {
   border-radius: 20px;
   padding: 50px 80px;
   box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
-  user-select: none;
-  pointer-events: none;
+  user-select: none;     
+  pointer-events: none;  
   z-index: 9999;
 }
 </style>
@@ -68,7 +56,7 @@ body {
 <body>
 
 <div id="hintText">Try to click me!</div>
-<div id="movingText"><span>I love you!</span></div>
+<div id="movingText">I love you!</div>
 <div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
@@ -79,7 +67,6 @@ const messages = [
 ];
 
 const movingText = document.getElementById("movingText");
-const movingSpan = movingText.querySelector("span");
 const hintText = document.getElementById("hintText");
 const messageBox = document.getElementById("messageBox");
 
@@ -87,7 +74,7 @@ let hoverCount = 0;
 const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
 
-// --- Move the text to a random position ---
+// Move text to a random position
 function randomPosition() {
   const maxX = window.innerWidth - movingText.offsetWidth;
   const maxY = window.innerHeight - movingText.offsetHeight;
@@ -95,26 +82,24 @@ function randomPosition() {
   movingText.style.top = Math.random() * maxY + "px";
 }
 
-// --- Show final message ---
+// Show final message
 function triggerWin() {
   movingText.style.display = "none";
   hintText.style.display = "none";
   messageBox.style.display = "block";
 }
 
-// --- Hover handler ---
+// Hover handler
 movingText.addEventListener("mouseover", () => {
   hoverCount++;
   
-  // Update text immediately
-  movingSpan.textContent = messages[messageIndex];
+  // Update text
+  movingText.textContent = messages[messageIndex];
+  console.log(`Hover #${hoverCount} | Message: "${messages[messageIndex]}"`);
   messageIndex = (messageIndex + 1) % messages.length;
 
-  // Teleport instantly
+  // Move text instantly
   randomPosition();
-
-  // Log hover count + message
-  console.log(`Hover #${hoverCount} | Message: "${movingSpan.textContent}"`);
 
   // Trigger final box
   if (hoverCount >= HOVER_THRESHOLD) {
@@ -122,8 +107,8 @@ movingText.addEventListener("mouseover", () => {
   }
 });
 
-// --- Initialize ---
-movingSpan.textContent = messages[0];
+// Initialize
+movingText.textContent = messages[0];
 randomPosition();
 </script>
 
