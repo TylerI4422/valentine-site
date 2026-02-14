@@ -18,16 +18,7 @@
         font-weight: bold;
         cursor: pointer;
         user-select: none;
-    }
-
-    #hintText {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 24px;
-        font-weight: bold;
-        color: #d63384;
+        transition: left 0.1s, top 0.1s;
     }
 
     #finalPopup {
@@ -49,7 +40,6 @@
 
 <body>
 
-<div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
 
 <div id="finalPopup">
@@ -70,8 +60,9 @@ const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
-let wasNear = false;
+let lastMoveTime = 0;
 
+// Place text randomly on screen
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 250);
     const y = Math.random() * (window.innerHeight - 150);
@@ -79,6 +70,7 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
+// Update the text message
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -88,28 +80,26 @@ function updateText() {
     }
 }
 
-// Only move when cursor ENTERS proximity
+// Move text when cursor is approaching
 document.addEventListener("mousemove", (e) => {
     const rect = text.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
+    // Distance from cursor to text center
     const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
-    const isNear = distance < 60;  // smaller radius = harder to reach
+    const now = Date.now();
 
-    if (isNear && !wasNear) {
+    // Anticipatory escape: moves if cursor is approaching within 150px
+    // and at least 800ms since last move
+    if (distance < 150 && now - lastMoveTime > 800) {
         randomPosition();
-        wasNear = true;
-
-        // tiny delay before allowing next move
-        setTimeout(() => {
-            wasNear = false;
-        }, 1200);
+        lastMoveTime = now;
     }
 });
 
-// Change message when clicked
+// Click to advance message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
