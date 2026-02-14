@@ -19,7 +19,8 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #d63384;
-    z-index: 10; /* make sure it’s on top */
+    z-index: 9999; /* guarantee on top */
+    pointer-events: none; /* mouse passes through it */
 }
 
 #movingText {
@@ -28,8 +29,8 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: none; /* instant jump */
-    z-index: 5; /* behind hint */
+    transition: none;
+    z-index: 10;
 }
 
 #finalPopup {
@@ -45,7 +46,7 @@ body {
     text-align: center;
     font-size: 38px;
     font-weight: bold;
-    z-index: 20; /* on top of everything */
+    z-index: 10000;
 }
 </style>
 </head>
@@ -69,6 +70,7 @@ const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
+let hoverIndex = 0;
 
 // Random position anywhere full viewport
 function randomPosition() {
@@ -82,7 +84,7 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
-// Update the text content
+// Update main message on click
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -92,12 +94,14 @@ function updateText() {
     }
 }
 
-// Instant move on hover
+// Hover: change text and teleport
 text.addEventListener("mouseenter", () => {
+    hoverIndex = (hoverIndex + 1) % messages.length;
+    text.textContent = messages[hoverIndex];
     randomPosition();
 });
 
-// Click advances message
+// Click: advance main message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
@@ -105,7 +109,7 @@ text.addEventListener("click", () => {
 });
 
 // Initialize
-updateText();
+text.textContent = messages[0];
 randomPosition();
 </script>
 
