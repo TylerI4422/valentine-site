@@ -34,7 +34,7 @@ body {
     z-index: 999; /* below hint text */
 }
 
-/* Final static message */
+/* Final static message box */
 #messageBox {
     display: none;
     position: fixed;
@@ -45,8 +45,14 @@ body {
     font-size: 72px;
     font-weight: bold;
     color: #d63384;
+    background: #ffe6f0;
+    border: 5px solid #d63384;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
     user-select: none;     
     pointer-events: none;  
+    z-index: 2000;
 }
 </style>
 </head>
@@ -84,21 +90,21 @@ function randomPosition() {
 function triggerWin() {
     movingText.style.display = "none";      // hide moving text
     hintText.style.display = "none";        // hide hint after win
-    messageBox.style.display = "block";     // show static win message
+    messageBox.style.display = "block";     // show final static message
 }
 
 // --- Hover event ---
 movingText.addEventListener("mouseenter", () => {
     hoverCount++;
 
-    // 1️⃣ Update text first
+    // Update text first
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // 2️⃣ Move text slightly after to ensure hover registers
+    // Move text slightly after so hover registers
     setTimeout(randomPosition, 50); 
 
-    // 3️⃣ Trigger win if threshold reached
+    // Trigger win if threshold reached
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
