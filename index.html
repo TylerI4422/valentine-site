@@ -47,10 +47,6 @@
 
 <script>
 
-/* ===============================
-   EDIT YOUR MESSAGES HERE
-=============================== */
-
 const messages = [
     "i love you",
     "so much",
@@ -60,15 +56,12 @@ const messages = [
     "okay fine"
 ];
 
-/* =============================== */
-
 const text = document.getElementById("movingText");
 const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
-let canMove = true;
+let wasNear = false;
 
-// Teleport
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 250);
     const y = Math.random() * (window.innerHeight - 150);
@@ -76,7 +69,6 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
-// Update message
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -86,35 +78,30 @@ function updateText() {
     }
 }
 
-// Move only when cursor gets close
+// Only move when cursor ENTERS proximity
 document.addEventListener("mousemove", (e) => {
-    if (!canMove) return;
-
     const rect = text.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
     const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
-    if (distance < 80) {  // how close before it runs
-        randomPosition();
-        canMove = false;
+    const isNear = distance < 80;
 
-        // lock movement for 1 full second
-        setTimeout(() => {
-            canMove = true;
-        }, 1000);
+    if (isNear && !wasNear) {
+        randomPosition();
     }
+
+    wasNear = isNear;
 });
 
-// Click advances message
+// Change message when clicked
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
     randomPosition();
 });
 
-// Initialize
 updateText();
 randomPosition();
 
