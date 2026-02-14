@@ -4,42 +4,40 @@
 <meta charset="UTF-8">
 <title>Catch Me ❤️</title>
 <style>
-    body {
-        margin: 0;
-        overflow: hidden;
-        background: #fff0f5;
-        font-family: Arial, sans-serif;
-    }
-    #movingText {
-        position: absolute;
-        font-size: 36px;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
-        transition: left 0.05s, top 0.05s;
-    }
-    #finalPopup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 60px;
-        border-radius: 20px;
-        box-shadow: 0 0 40px rgba(0,0,0,0.4);
-        text-align: center;
-        font-size: 38px;
-        font-weight: bold;
-    }
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #fff0f5;
+    font-family: Arial, sans-serif;
+}
+#movingText {
+    position: absolute;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: left 0.05s, top 0.05s;
+}
+#finalPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
 
 <div id="movingText"></div>
-<div id="finalPopup">
-    ❤️ I love you. Always. ❤️
-</div>
+<div id="finalPopup">❤️ I love you. Always. ❤️</div>
 
 <script>
 const messages = [
@@ -58,7 +56,6 @@ let clickCount = 0;
 let lastMoveTime = 0;
 let lastMouse = {x: 0, y: 0};
 
-// place text randomly
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 250);
     const y = Math.random() * (window.innerHeight - 150);
@@ -66,7 +63,6 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
-// update text
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -76,26 +72,29 @@ function updateText() {
     }
 }
 
-// move away from approaching cursor
 document.addEventListener("mousemove", (e) => {
+    const now = Date.now();
+    if (now - lastMoveTime < 400) return; // cooldown
+
     const rect = text.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
-    // cursor movement vector
-    const dx = e.clientX - lastMouse.x;
-    const dy = e.clientY - lastMouse.y;
+    const toText = {x: centerX - e.clientX, y: centerY - e.clientY};
+    const cursorMove = {x: e.clientX - lastMouse.x, y: e.clientY - lastMouse.y};
 
     lastMouse = {x: e.clientX, y: e.clientY};
 
-    const now = Date.now();
+    const distance = Math.hypot(toText.x, toText.y);
+    if (distance > 200) return; // only react if close
 
-    // Only teleport if cursor is approaching AND within 200px
-    if (distance < 200 && now - lastMoveTime > 400) {
-        // move opposite the cursor vector
-        let newX = parseFloat(rect.left) - dx * 3;
-        let newY = parseFloat(rect.top) - dy * 3;
+    // Dot product to check if cursor is moving toward text
+    const dot = toText.x * cursorMove.x + toText.y * cursorMove.y;
+
+    if (dot > 0) { // cursor is approaching
+        // move opposite the cursor
+        let newX = rect.left - cursorMove.x * 3;
+        let newY = rect.top - cursorMove.y * 3;
 
         // clamp within screen
         newX = Math.min(Math.max(0, newX), window.innerWidth - 250);
@@ -108,7 +107,7 @@ document.addEventListener("mousemove", (e) => {
     }
 });
 
-// click to advance message
+// click to advance
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
@@ -118,5 +117,6 @@ text.addEventListener("click", () => {
 updateText();
 randomPosition();
 </script>
+
 </body>
 </html>
