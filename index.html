@@ -29,9 +29,10 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 let hoverIndex = 0;
-let hoverCounter = 0;       // mouse touches
+let hoverCounter = 0;
+const HOVER_THRESHOLD = 10; // can change this
 let currentFontSize = 36;
-const HOVER_THRESHOLD = 10;  // now you can change this to anything
+let unlocked = false; // indicates you can now click
 
 // Random position
 function randomPosition() {
@@ -51,26 +52,43 @@ function updateText() {
     }
 }
 
-// Hover: increment, shrink, change text, teleport
+// Hover: only move/shrink if not unlocked
 text.addEventListener("mouseenter", () => {
     hoverCounter++;
 
-    // cycle hover messages
-    text.textContent = messages[hoverIndex];
-    hoverIndex = (hoverIndex + 1) % messages.length;
+    if (!unlocked) {
+        // cycle hover messages
+        text.textContent = messages[hoverIndex];
+        hoverIndex = (hoverIndex + 1) % messages.length;
 
-    // shrink font, min 12px
-    currentFontSize = Math.max(currentFontSize - 2, 12);
-    text.style.fontSize = currentFontSize + "px";
+        // shrink font slightly
+        currentFontSize = Math.max(currentFontSize - 2, 12);
+        text.style.fontSize = currentFontSize + "px";
 
-    randomPosition();
+        randomPosition();
+
+        // check if threshold reached
+        if (hoverCounter >= HOVER_THRESHOLD) {
+            unlocked = true;
+            // make the box bigger so she can click
+            currentFontSize = 60;
+            text.style.fontSize = currentFontSize + "px";
+            text.style.fontWeight = "bold";
+            // optional: center it to make it easier
+            const centerX = (window.innerWidth - text.offsetWidth)/2;
+            const centerY = (window.innerHeight - text.offsetHeight)/2;
+            text.style.left = centerX + "px";
+            text.style.top = centerY + "px";
+        }
+    }
 });
 
-// Click: only works after hover threshold
+// Click: only allowed if unlocked
 text.addEventListener("click", () => {
-    if (hoverCounter >= HOVER_THRESHOLD) {
+    if (unlocked) {
         clickCount++;
         updateText();
+        // optional: teleport again for next message
         randomPosition();
     } else {
         console.log(`Keep hovering! ${hoverCounter}/${HOVER_THRESHOLD}`);
