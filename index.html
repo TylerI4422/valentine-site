@@ -21,7 +21,7 @@ body {
     font-weight: bold;
     color: #d63384;
     pointer-events: none;
-    z-index: 1; /* behind moving text */
+    z-index: 1000; /* above moving text */
 }
 
 /* Moving text */
@@ -31,7 +31,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    z-index: 2; /* above hint */
+    z-index: 999; /* below hint text */
 }
 
 /* Final static message */
@@ -84,7 +84,7 @@ function randomPosition() {
 function triggerWin() {
     movingText.style.display = "none";      // hide moving text
     hintText.style.display = "none";        // hide hint after win
-    messageBox.style.display = "block";     // show final static message
+    messageBox.style.display = "block";     // show static win message
 }
 
 // --- Hover event ---
@@ -95,7 +95,7 @@ movingText.addEventListener("mouseenter", () => {
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // 2️⃣ Move text slightly after so the hover registers
+    // 2️⃣ Move text slightly after to ensure hover registers
     setTimeout(randomPosition, 50); 
 
     // 3️⃣ Trigger win if threshold reached
