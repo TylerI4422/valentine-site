@@ -5,63 +5,63 @@
 <title>Valentine Surprise ❤️</title>
 <style>
 body {
-    margin: 0;
-    overflow: hidden;
-    background-color: #fff0f5;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  overflow: hidden;
+  background-color: #fff0f5;
+  font-family: Arial, sans-serif;
 }
 
 #hintText {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    font-weight: bold;
-    color: #d63384;
-    pointer-events: none;
-    z-index: 10;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #d63384;
+  pointer-events: none;
+  z-index: 10;
 }
 
 #movingText {
-    position: absolute;
-    font-size: 36px;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-    z-index: 20;
+  position: absolute;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  z-index: 20;
 }
 
 #movingText span {
-    display: inline-block;
-    animation: heartbeat 1.2s infinite;
+  display: inline-block;
+  font-size: 36px;
+  animation: heartbeat 1.2s infinite;
 }
 
 @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    25% { transform: scale(1.1); }
-    50% { transform: scale(1.2); }
-    75% { transform: scale(1.1); }
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1.2); }
+  75% { transform: scale(1.1); }
 }
 
 #messageBox {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 72px;
-    font-weight: bold;
-    color: #d63384;
-    background: #ffe6f0;
-    border: 5px solid #d63384;
-    border-radius: 20px;
-    padding: 50px 80px;
-    box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
-    user-select: none;     
-    pointer-events: none;  
-    z-index: 9999;
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 72px;
+  font-weight: bold;
+  color: #d63384;
+  background: #ffe6f0;
+  border: 5px solid #d63384;
+  border-radius: 20px;
+  padding: 50px 80px;
+  box-shadow: 0 0 30px rgba(214, 51, 132, 0.5);
+  user-select: none;
+  pointer-events: none;
+  z-index: 9999;
 }
 </style>
 </head>
@@ -73,9 +73,9 @@ body {
 
 <script>
 const messages = [
-    "I love you", "So much", "You make me happy", "You're the best",
-    "I am so proud of you", "Forever and always", "You inspire me",
-    "My everything", "You complete me", "Love you to the moon"
+  "I love you", "So much", "You make me happy", "You're the best",
+  "I am so proud of you", "Forever and always", "You inspire me",
+  "My everything", "You complete me", "Love you to the moon"
 ];
 
 const movingText = document.getElementById("movingText");
@@ -87,40 +87,39 @@ let hoverCount = 0;
 const HOVER_THRESHOLD = 10;
 let messageIndex = 0;
 
-// --- Random position ---
+// --- Move the text to a random position ---
 function randomPosition() {
-    const maxX = window.innerWidth - movingText.offsetWidth;
-    const maxY = window.innerHeight - movingText.offsetHeight;
-    movingText.style.left = Math.random() * maxX + "px";
-    movingText.style.top = Math.random() * maxY + "px";
+  const maxX = window.innerWidth - movingText.offsetWidth;
+  const maxY = window.innerHeight - movingText.offsetHeight;
+  movingText.style.left = Math.random() * maxX + "px";
+  movingText.style.top = Math.random() * maxY + "px";
 }
 
 // --- Show final message ---
 function triggerWin() {
-    movingText.style.display = "none";
-    hintText.style.display = "none";
-    messageBox.style.display = "block";
+  movingText.style.display = "none";
+  hintText.style.display = "none";
+  messageBox.style.display = "block";
 }
 
-// --- Hover event ---
+// --- Hover handler ---
 movingText.addEventListener("mouseover", () => {
-    // Increment hover count first
-    hoverCount++;
+  hoverCount++;
+  
+  // Update text immediately
+  movingSpan.textContent = messages[messageIndex];
+  messageIndex = (messageIndex + 1) % messages.length;
 
-    // Log to console
-    console.log(`Hover #${hoverCount} | Message: "${messages[messageIndex]}"`);
+  // Teleport instantly
+  randomPosition();
 
-    // Update text inside span
-    movingSpan.textContent = messages[messageIndex];
-    messageIndex = (messageIndex + 1) % messages.length;
+  // Log hover count + message
+  console.log(`Hover #${hoverCount} | Message: "${movingSpan.textContent}"`);
 
-    // Move instantly
-    randomPosition();
-
-    // Trigger final message if threshold reached
-    if (hoverCount >= HOVER_THRESHOLD) {
-        triggerWin();
-    }
+  // Trigger final box
+  if (hoverCount >= HOVER_THRESHOLD) {
+    triggerWin();
+  }
 });
 
 // --- Initialize ---
