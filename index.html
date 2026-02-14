@@ -10,6 +10,7 @@ body {
     background: #fff0f5;
     font-family: Arial, sans-serif;
 }
+
 #hintText {
     position: fixed;
     top: 20px;
@@ -18,15 +19,19 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #d63384;
+    z-index: 10; /* make sure it’s on top */
 }
+
 #movingText {
     position: absolute;
-    font-size: 36px; /* easier to click */
+    font-size: 36px;
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: left 0.12s, top 0.12s; /* visible jump */
+    transition: none; /* instant jump */
+    z-index: 5; /* behind hint */
 }
+
 #finalPopup {
     display: none;
     position: fixed;
@@ -40,6 +45,7 @@ body {
     text-align: center;
     font-size: 38px;
     font-weight: bold;
+    z-index: 20; /* on top of everything */
 }
 </style>
 </head>
@@ -64,10 +70,14 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 
-// Random position anywhere in viewport
+// Random position anywhere full viewport
 function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const maxX = window.innerWidth - text.offsetWidth;
+    const maxY = window.innerHeight - text.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
     text.style.left = x + "px";
     text.style.top = y + "px";
 }
@@ -82,12 +92,12 @@ function updateText() {
     }
 }
 
-// Move instantly on hover
+// Instant move on hover
 text.addEventListener("mouseenter", () => {
     randomPosition();
 });
 
-// Click advances message and teleports
+// Click advances message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
