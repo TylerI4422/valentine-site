@@ -20,8 +20,8 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #d63384;
-    z-index: 9999;
-    pointer-events: none; /* so it can't be clicked */
+    z-index: 1;           /* lower z-index than moving text */
+    pointer-events: none;  /* so it can't block hover */
 }
 
 /* Moving text */
@@ -31,6 +31,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
+    z-index: 2;  /* ensure it's above the hint text */
 }
 
 /* Final static message */
@@ -94,7 +95,7 @@ movingText.addEventListener("mouseenter", () => {
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // Move text after DOM updates
+    // Move text immediately after updating
     requestAnimationFrame(() => {
         randomPosition();
     });
