@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Catch Me ❤️</title>
-
 <style>
     body {
         margin: 0;
@@ -11,16 +10,14 @@
         background: #fff0f5;
         font-family: Arial, sans-serif;
     }
-
     #movingText {
         position: absolute;
         font-size: 36px;
         font-weight: bold;
         cursor: pointer;
         user-select: none;
-        transition: left 0.1s, top 0.1s;
+        transition: left 0.05s, top 0.05s;
     }
-
     #finalPopup {
         display: none;
         position: fixed;
@@ -37,11 +34,9 @@
     }
 </style>
 </head>
-
 <body>
 
 <div id="movingText"></div>
-
 <div id="finalPopup">
     ❤️ I love you. Always. ❤️
 </div>
@@ -61,8 +56,9 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 let lastMoveTime = 0;
+let lastMouse = {x: 0, y: 0};
 
-// Place text randomly on screen
+// place text randomly
 function randomPosition() {
     const x = Math.random() * (window.innerWidth - 250);
     const y = Math.random() * (window.innerHeight - 150);
@@ -70,7 +66,7 @@ function randomPosition() {
     text.style.top = y + "px";
 }
 
-// Update the text message
+// update text
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -80,26 +76,39 @@ function updateText() {
     }
 }
 
-// Move text when cursor is approaching
+// move away from approaching cursor
 document.addEventListener("mousemove", (e) => {
     const rect = text.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-
-    // Distance from cursor to text center
     const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+
+    // cursor movement vector
+    const dx = e.clientX - lastMouse.x;
+    const dy = e.clientY - lastMouse.y;
+
+    lastMouse = {x: e.clientX, y: e.clientY};
 
     const now = Date.now();
 
-    // Anticipatory escape: moves if cursor is approaching within 150px
-    // and at least 800ms since last move
-    if (distance < 150 && now - lastMoveTime > 800) {
-        randomPosition();
+    // Only teleport if cursor is approaching AND within 200px
+    if (distance < 200 && now - lastMoveTime > 400) {
+        // move opposite the cursor vector
+        let newX = parseFloat(rect.left) - dx * 3;
+        let newY = parseFloat(rect.top) - dy * 3;
+
+        // clamp within screen
+        newX = Math.min(Math.max(0, newX), window.innerWidth - 250);
+        newY = Math.min(Math.max(0, newY), window.innerHeight - 150);
+
+        text.style.left = newX + "px";
+        text.style.top = newY + "px";
+
         lastMoveTime = now;
     }
 });
 
-// Click to advance message
+// click to advance message
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
@@ -109,6 +118,5 @@ text.addEventListener("click", () => {
 updateText();
 randomPosition();
 </script>
-
 </body>
 </html>
