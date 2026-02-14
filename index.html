@@ -20,6 +20,16 @@
         user-select: none;
     }
 
+    #hintText {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        font-weight: bold;
+        color: #d63384;
+    }
+
     #finalPopup {
         display: none;
         position: fixed;
@@ -39,6 +49,7 @@
 
 <body>
 
+<div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
 
 <div id="finalPopup">
@@ -46,7 +57,6 @@
 </div>
 
 <script>
-
 const messages = [
     "i love you",
     "so much",
@@ -86,13 +96,17 @@ document.addEventListener("mousemove", (e) => {
 
     const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
-    const isNear = distance < 80;
+    const isNear = distance < 60;  // smaller radius = harder to reach
 
     if (isNear && !wasNear) {
         randomPosition();
-    }
+        wasNear = true;
 
-    wasNear = isNear;
+        // tiny delay before allowing next move
+        setTimeout(() => {
+            wasNear = false;
+        }, 1200);
+    }
 });
 
 // Change message when clicked
@@ -104,7 +118,6 @@ text.addEventListener("click", () => {
 
 updateText();
 randomPosition();
-
 </script>
 
 </body>
