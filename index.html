@@ -4,49 +4,19 @@
 <meta charset="UTF-8">
 <title>Catch Me ❤️</title>
 <style>
-body {
-    margin: 0;
-    overflow: hidden;
-    background: #fff0f5;
-    font-family: Arial, sans-serif;
-}
-
+body { margin: 0; overflow: hidden; background: #fff0f5; font-family: Arial, sans-serif; }
 #hintText {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    font-weight: bold;
-    color: #d63384;
-    z-index: 9999;
-    pointer-events: none;
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    font-size: 28px; font-weight: bold; color: #d63384; z-index: 9999; pointer-events: none;
 }
-
 #movingText {
-    position: absolute;
-    font-size: 36px;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-    transition: none;
-    z-index: 10;
+    position: absolute; font-size: 36px; font-weight: bold; cursor: pointer;
+    user-select: none; transition: none; z-index: 10;
 }
-
 #finalPopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 60px;
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.4);
-    text-align: center;
-    font-size: 38px;
-    font-weight: bold;
-    z-index: 10000;
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; padding: 60px; border-radius: 20px; box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    text-align: center; font-size: 38px; font-weight: bold; z-index: 10000;
 }
 </style>
 </head>
@@ -57,13 +27,12 @@ body {
 <div id="finalPopup">❤️ I love you. Always. ❤️</div>
 
 <script>
+// Affirming/supportive messages
 const messages = [
-    "i love you",
-    "so much",
-    "more than you know",
-    "you make me so happy",
-    "almost there...",
-    "okay fine"
+    "i love you","so much","more than you know","you make me so happy","almost there...",
+    "okay fine","my heart is yours","you’re the best","i am so proud of you","you’re amazing",
+    "i appreciate you","forever and always","you complete me","my everything","you’re my sunshine",
+    "my heart beats for you","love you to the moon","you’re incredible","you inspire me","you mean so much to me"
 ];
 
 const text = document.getElementById("movingText");
@@ -71,19 +40,15 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 let hoverIndex = 0;
-let hoverCounter = 0; // track mouse touches
-let currentFontSize = 36; // starting font size
+let hoverCounter = 0;  // tracks mouse touches
+let currentFontSize = 36;
 
 // Random position anywhere full viewport
 function randomPosition() {
     const maxX = window.innerWidth - text.offsetWidth;
     const maxY = window.innerHeight - text.offsetHeight;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    text.style.left = x + "px";
-    text.style.top = y + "px";
+    text.style.left = Math.random() * maxX + "px";
+    text.style.top = Math.random() * maxY + "px";
 }
 
 // Update main message on click
@@ -96,29 +61,30 @@ function updateText() {
     }
 }
 
-// Hover: change text, teleport, shrink font, increment counter
+// Hover: increment counter, shrink font, change text, teleport
 text.addEventListener("mouseenter", () => {
     hoverCounter++;
+
     // cycle hover messages
     text.textContent = messages[hoverIndex];
     hoverIndex = (hoverIndex + 1) % messages.length;
 
-    // shrink font slightly, min 12px
+    // shrink font but never below 12px
     currentFontSize = Math.max(currentFontSize - 2, 12);
     text.style.fontSize = currentFontSize + "px";
 
     randomPosition();
 });
 
-// Click: only allowed after 100 hovers
+// Click: only works after 100 hovers
 text.addEventListener("click", () => {
     if (hoverCounter >= 10) {
         clickCount++;
         updateText();
         randomPosition();
     } else {
-        // optional: feedback for early clicks
-        console.log(`Keep trying! Hovers: ${hoverCounter}/100`);
+        // optional: feedback in console
+        console.log(`Keep going! Hovers: ${hoverCounter}/100`);
     }
 });
 
