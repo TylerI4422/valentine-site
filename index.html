@@ -4,23 +4,50 @@
 <meta charset="UTF-8">
 <title>Catch Me ❤️</title>
 <style>
-body { margin: 0; overflow: hidden; background: #fff0f5; font-family: Arial, sans-serif; }
-#hintText { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 28px; font-weight: bold; color: #d63384; z-index: 9999; pointer-events: none; }
-#movingText { position: absolute; font-size: 36px; font-weight: bold; cursor: pointer; user-select: none; transition: none; z-index: 10; }
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #fff0f5;
+    font-family: Arial, sans-serif;
+}
+
+#hintText {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #d63384;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+#movingText {
+    position: absolute;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: none;
+    z-index: 10;
+}
+
 #finalPopup {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    background: #ffe6f0;
+    padding: 50px;
+    border-radius: 25px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.4);
     text-align: center;
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
     z-index: 10000;
+    color: #d63384;
 }
 </style>
 </head>
@@ -28,7 +55,7 @@ body { margin: 0; overflow: hidden; background: #fff0f5; font-family: Arial, san
 
 <div id="hintText">Try to click me!</div>
 <div id="movingText"></div>
-<div id="finalPopup" id="winMessage">🎉 YOU WIN! 🎉</div>
+<div id="finalPopup" id="winMessage">❤️ I LOVE YOU SO MUCH! ❤️</div>
 
 <script>
 // --- Messages for hover text ---
@@ -44,10 +71,9 @@ const popup = document.getElementById("finalPopup");
 
 // --- Game state ---
 let hoverCounter = 0;
-const HOVER_THRESHOLD = 10; // change this number to anything
+const HOVER_THRESHOLD = 10; // set how many hovers before win
 let hoverIndex = 0;
 let currentFontSize = 36;
-let unlocked = false;
 
 // --- Random position ---
 function randomPosition() {
@@ -59,35 +85,33 @@ function randomPosition() {
 
 // --- Trigger Win ---
 function triggerWin() {
-    text.style.display = "none";
-    popup.style.display = "block";
-    popup.textContent = "❤️ I LOVE YOU SO MUCH! ❤️"; // <--- Put any message you want here
+    text.style.display = "none";           // hide the runaway text
+    popup.style.display = "block";         // show big box
+    popup.textContent = "🎉 YOU WIN! 🎉\nI love you so much!"; // <-- edit your custom message here
 }
 
 // --- Hover event ---
 text.addEventListener("mouseenter", () => {
-    if (!unlocked) {
-        hoverCounter++;
-        // Cycle hover messages
-        text.textContent = messages[hoverIndex];
-        hoverIndex = (hoverIndex + 1) % messages.length;
+    hoverCounter++;
 
-        // shrink font (min 12px)
-        currentFontSize = Math.max(currentFontSize - 2, 12);
-        text.style.fontSize = currentFontSize + "px";
+    // cycle hover messages
+    text.textContent = messages[hoverIndex];
+    hoverIndex = (hoverIndex + 1) % messages.length;
 
-        // teleport
-        randomPosition();
+    // shrink font (min 12px)
+    currentFontSize = Math.max(currentFontSize - 2, 12);
+    text.style.fontSize = currentFontSize + "px";
 
-        // Check threshold
-        if (hoverCounter >= HOVER_THRESHOLD) {
-            unlocked = true;
-            triggerWin();
-        }
+    // teleport
+    randomPosition();
+
+    // check if threshold reached
+    if (hoverCounter >= HOVER_THRESHOLD) {
+        triggerWin(); // automatically win
     }
 });
 
-// Initialize
+// --- Initialize ---
 text.textContent = messages[0];
 text.style.fontSize = currentFontSize + "px";
 randomPosition();
