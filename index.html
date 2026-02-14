@@ -112,7 +112,7 @@ text.addEventListener("mouseenter", () => {
 
 // Click: only allowed after 100 hovers
 text.addEventListener("click", () => {
-    if (hoverCounter >= 100) {
+    if (hoverCounter >= 10) {
         clickCount++;
         updateText();
         randomPosition();
