@@ -10,22 +10,13 @@ body {
     background: #fff0f5;
     font-family: Arial, sans-serif;
 }
-#hintText {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    font-weight: bold;
-    color: #d63384;
-}
 #movingText {
     position: absolute;
-    font-size: 18px; /* tiny to make it hard to find */
+    font-size: 32px;
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    transition: left 0.1s, top 0.1s;
+    transition: left 0.05s, top 0.05s; /* smooth but quick */
 }
 #finalPopup {
     display: none;
@@ -45,7 +36,6 @@ body {
 </head>
 <body>
 
-<div id="hintText">Click me!</div>
 <div id="movingText"></div>
 <div id="finalPopup">❤️ I love you. Always. ❤️</div>
 
@@ -64,13 +54,15 @@ const popup = document.getElementById("finalPopup");
 
 let clickCount = 0;
 
+// Random position within viewport
 function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const x = Math.random() * (window.innerWidth - 200);
+    const y = Math.random() * (window.innerHeight - 100);
     text.style.left = x + "px";
     text.style.top = y + "px";
 }
 
+// Update the displayed message
 function updateText() {
     if (clickCount < messages.length) {
         text.textContent = messages[clickCount];
@@ -80,14 +72,19 @@ function updateText() {
     }
 }
 
-// every click teleports text
+// Move the text the instant the cursor touches it
+text.addEventListener("mouseenter", () => {
+    randomPosition();
+});
+
+// Click to advance message and teleport
 text.addEventListener("click", () => {
     clickCount++;
     updateText();
     randomPosition();
 });
 
-// initialize
+// Initialize
 updateText();
 randomPosition();
 </script>
