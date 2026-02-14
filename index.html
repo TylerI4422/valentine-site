@@ -20,8 +20,7 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #d63384;
-    z-index: 1;           /* lower z-index than moving text */
-    pointer-events: none;  /* so it can't block hover */
+    pointer-events: none;
 }
 
 /* Moving text */
@@ -31,12 +30,12 @@ body {
     font-weight: bold;
     cursor: pointer;
     user-select: none;
-    z-index: 2;  /* ensure it's above the hint text */
+    z-index: 2;  /* above hint */
 }
 
 /* Final static message */
 #messageBox {
-    display: none; /* hidden initially */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -57,7 +56,7 @@ body {
 <div id="messageBox">YOU ARE AMAZING</div>
 
 <script>
-// --- Messages for moving text ---
+// --- Messages ---
 const messages = [
     "I love you", "So much", "You make me happy", "You're the best",
     "I am so proud of you", "Forever and always", "You inspire me",
@@ -82,25 +81,23 @@ function randomPosition() {
 
 // --- Show final static message ---
 function triggerWin() {
-    movingText.style.display = "none"; // hide moving text
-    hintText.style.display = "none";   // hide hint
-    messageBox.style.display = "block"; // show static win message
+    movingText.style.display = "none";
+    hintText.style.display = "none";
+    messageBox.style.display = "block";
 }
 
 // --- Hover event ---
 movingText.addEventListener("mouseenter", () => {
     hoverCount++;
 
-    // Update text first
+    // 1️⃣ Update text first
     movingText.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
-    // Move text immediately after updating
-    requestAnimationFrame(() => {
-        randomPosition();
-    });
+    // 2️⃣ Move text after a tiny delay to ensure text update registers
+    setTimeout(randomPosition, 50); // 50ms delay works reliably
 
-    // Check threshold
+    // 3️⃣ Check threshold
     if (hoverCount >= HOVER_THRESHOLD) {
         triggerWin();
     }
