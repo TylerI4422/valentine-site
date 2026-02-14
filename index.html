@@ -11,6 +11,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Hint text that says "Try to hover over me!" */
 #hintText {
     position: fixed;
     top: 20px;
@@ -23,6 +24,7 @@ body {
     pointer-events: none;
 }
 
+/* The moving text */
 #movingText {
     position: absolute;
     font-size: 36px;
@@ -32,20 +34,21 @@ body {
     z-index: 10;
 }
 
-#messageBox {
+/* The final win message box */
+#winBox {
     display: none; /* hidden initially */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 600px;
-    padding: 40px;
+    padding: 50px;
     background-color: #ffe6f0;
     border: 4px solid #d63384;
     border-radius: 20px;
     box-shadow: 0 0 50px rgba(0,0,0,0.4);
     text-align: center;
-    font-size: 48px;
+    font-size: 72px;
     font-weight: bold;
     color: #d63384;
     z-index: 1000;
@@ -56,17 +59,26 @@ body {
 
 <div id="hintText">Try to hover over me!</div>
 <div id="movingText">I love you!</div>
-<div id="messageBox">YOU ARE AMAZING</div>
+<div id="winBox">YOU ARE AMAZING</div>
 
 <script>
-// --- Variables ---
+// --- Hover messages for fun ---
+const messages = [
+    "i love you","so much","more than you know","you make me so happy","almost there...",
+    "okay fine","my heart is yours","you’re the best","i am so proud of you","you’re amazing",
+    "i appreciate you","forever and always","you complete me","my everything","you’re my sunshine",
+    "my heart beats for you","love you to the moon","you’re incredible","you inspire me","you mean so much to me"
+];
+
 const movingText = document.getElementById("movingText");
-const messageBox = document.getElementById("messageBox");
+const hintText = document.getElementById("hintText");
+const winBox = document.getElementById("winBox");
 
 let hoverCount = 0;
-const HOVER_THRESHOLD = 10; // change this number to whatever you want
+const HOVER_THRESHOLD = 10; // number of hovers before win
+let hoverIndex = 0;
 
-// --- Function: random position ---
+// --- Random position function ---
 function randomPosition() {
     const maxX = window.innerWidth - movingText.offsetWidth;
     const maxY = window.innerHeight - movingText.offsetHeight;
@@ -74,23 +86,35 @@ function randomPosition() {
     movingText.style.top = Math.random() * maxY + "px";
 }
 
+// --- Trigger the win ---
+function triggerWin() {
+    // Hide everything else
+    movingText.style.display = "none";
+    hintText.style.display = "none";
+
+    // Show the win message
+    winBox.style.display = "block";
+}
+
 // --- Hover event ---
 movingText.addEventListener("mouseenter", () => {
     hoverCount++;
-    randomPosition(); // move text each hover
 
+    // Cycle through fun messages
+    movingText.textContent = messages[hoverIndex];
+    hoverIndex = (hoverIndex + 1) % messages.length;
+
+    // Move text randomly
+    randomPosition();
+
+    // Check if hover threshold reached
     if (hoverCount >= HOVER_THRESHOLD) {
-        // Hide everything
-        movingText.style.display = "none";
-        document.getElementById("hintText").style.display = "none";
-
-        // Show message box
-        messageBox.style.display = "block";
-        messageBox.textContent = "YOU ARE AMAZING"; // <-- EDIT YOUR MESSAGE HERE
+        triggerWin();
     }
 });
 
 // --- Initialize ---
+movingText.textContent = messages[0];
 randomPosition();
 </script>
 
